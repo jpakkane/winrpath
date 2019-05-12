@@ -2,3 +2,9 @@
 *.exe
 *.dll
 *.lib
+*.obj
+*.o
+*.exp
+*.pdb
+*.exp
+*.idb

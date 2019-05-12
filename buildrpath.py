@@ -15,5 +15,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import shutil, subprocess, sys, os
+
+def build_binaries():
+    libname = 'somelib.dll'
+    libimport = libname[:-3] + 'lib'
+    subprocess.check_call(['cl',
+                           '/MDd',
+                           '/nologo',
+                           '/c',
+                           '/Folibfile.obj',
+                           'libfile.c'])
+    subprocess.check_call(['link',
+                           '/nologo',
+                           '/DLL',
+                           '/OUT:' + libname,
+                           'libfile.obj'])
+    subprocess.check_call(['cl',
+                           '/nologo',
+                           'prog.c',
+                           '/link',
+                           libimport])
+
 if __name__ == '__main__':
-    print('Do something.')
+    build_binaries()
+
