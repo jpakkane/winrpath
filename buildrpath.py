@@ -19,7 +19,7 @@ import shutil, subprocess, sys, os
 
 def build_binaries():
     cwdlen = len(os.getcwd())
-    base = 'a'*(cwdlen+20)
+    base = 'a'*(cwdlen+30)
     libname = base + '.dll'
     libimport = libname[:-3] + 'lib'
     subprocess.check_call(['cl',
@@ -47,14 +47,13 @@ def create_builddir(dirname, basename):
     exe_outname = os.path.join(dirname, 'prog.exe')
     dll_outname = os.path.join(subdir, 'helper.dll')
     abs_dll_outname = os.path.join(os.getcwd(), dll_outname)
-    placeholder_name = basename + '.dll'
-    print(len(abs_dll_outname))
-    print(len(placeholder_name))
-    assert(len(abs_dll_outname) == len(placeholder_name))
+    replacement_from = basename + '.dll'
+    replacement_to = abs_dll_outname + '\0'*(len(replacement_from) - len(abs_dll_outname))
+    assert(len(replacement_from) == len(replacement_to))
     dll = open(basename + '.dll', 'rb').read()
     exe = open('prog.exe', 'rb').read()
-    exe = exe.replace(placeholder_name.encode(encoding='ascii'),
-                      abs_dll_outname.encode(encoding='ascii'))
+    exe = exe.replace(replacement_from.encode(encoding='ascii'),
+                      replacement_to.encode(encoding='ascii'))
     open(dll_outname, 'wb').write(dll)
     open(exe_outname, 'wb').write(exe)
 
